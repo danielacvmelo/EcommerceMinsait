@@ -5,6 +5,8 @@ export interface Product {
   barcode: string;
   image?: string;
   description?: string;
+  stock?: number;
+  discount?: number;
 }
 
 export interface CartItem extends Product {
