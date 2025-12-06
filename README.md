@@ -1,59 +1,75 @@
-# LojaMinsait
+# 🛍️ Minsait Store - Projeto Final Angular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.1.
+Este projeto é um **E-commerce Completo** desenvolvido como avaliação final do módulo de Angular. A aplicação consome uma API REST em Java e oferece funcionalidades de compra (Carrinho) e gestão de produtos (CRUD).
 
-## Development server
+## 🚀 Tecnologias Utilizadas
 
-To start a local development server, run:
+* **Front-end:** Angular 18 (Standalone Components)
+* **Estilização:** Bootstrap 5 & Bootstrap Icons (Tema Dark/Cyber)
+* **Back-end:** Java Spring Boot (API REST)
+* **Banco de Dados:** PostgreSQL (via Docker)
+* **Gerenciamento de Estado:** RxJS (BehaviorSubject)
 
-```bash
-ng serve
-```
+---
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## ⚙️ Pré-requisitos
 
-## Code scaffolding
+Para rodar este projeto, você precisa ter a **API Java rodando**.
+Certifique-se de que o Back-end está ativo na porta `8080` e o banco de dados PostgreSQL está subido via Docker.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+---
 
-```bash
-ng generate component component-name
-```
+## 📦 Como Rodar o Projeto
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Siga os passos abaixo para iniciar a aplicação Front-end:
 
-```bash
-ng generate --help
-```
+1.  **Instalar dependências:**
+    Abra o terminal na pasta do projeto e execute:
+    ```bash
+    npm install
+    ```
 
-## Building
+2.  **Executar o servidor de desenvolvimento:**
+    ```bash
+    ng serve
+    ```
 
-To build the project run:
+3.  **Acessar a aplicação:**
+    Abra o navegador em: `http://localhost:4200`
 
-```bash
-ng build
-```
+---
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## ✨ Funcionalidades Implementadas
 
-## Running unit tests
+### 🛒 Módulo Cliente (Loja)
+* **Home Page:** Vitrine de produtos consumindo a API real.
+* **Carrinho de Compras:**
+    * Adicionar produtos (atualiza contador no Header).
+    * Listagem de itens com cálculo automático de Subtotal e Total.
+    * Remoção de itens.
+    * **Persistência:** Os dados do carrinho são salvos no `LocalStorage` (não somem ao atualizar a página).
+* **Validações Visuais:** Botão de compra desabilita se o estoque for 0.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### 🔧 Módulo de Gestão (CRUD)
+Acesse através do link **"Gerenciar"** no menu superior.
+* **Listagem (Read):** Tabela administrativa com dados dos produtos.
+* **Cadastro (Create):** Formulário com validações (Reactive Forms) para criar novos produtos.
+* **Edição (Update):** Carregamento dos dados existentes para alteração.
+* **Exclusão (Delete):** Remoção de produtos (com verificação de integridade referencial da API).
 
-```bash
-ng test
-```
+---
 
-## Running end-to-end tests
+## 📂 Estrutura do Projeto
 
-For end-to-end (e2e) testing, run:
+O código foi organizado seguindo as boas práticas de separação de responsabilidades:
 
-```bash
-ng e2e
-```
+* **`src/app/components`**: Componentes reutilizáveis (apenas exibição).
+    * `header`, `hero`, `products-cards`, `products-list`, `product-table`.
+* **`src/app/pages`**: Componentes de página "inteligentes" (conectam com serviços).
+    * `home`, `cart`, `admin`, `product-form`.
+* **`src/app/services`**: Lógica de negócios e comunicação HTTP.
+    * `product.service.ts` (API Java).
+    * `cart.service.ts` (Regras do Carrinho e LocalStorage).
+* **`src/app/models`**: Interfaces TypeScript (`Product`, `CartItem`).
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
