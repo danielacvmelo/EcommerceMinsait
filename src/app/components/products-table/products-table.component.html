@@ -1,1 +1,36 @@
-<p>products-table works!</p>
+<div class="table-responsive">
+  <table class="table table-striped table-hover border shadow-sm">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">Cód. Barras</th>
+        <th scope="col">Nome</th>
+        <th scope="col">Preço</th>
+        <th scope="col" class="text-end">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (product of products; track product.id) {
+        <tr>
+          <td>{{ product.barcode }}</td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.price | currency:'BRL' }}</td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-primary me-2" (click)="onEdit(product)">
+              <i class="bi bi-pencil"></i>
+            </button>
+            
+            <button class="btn btn-sm btn-danger" (click)="onDelete(product)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="4" class="text-center py-5 text-muted">
+            Nenhum produto cadastrado.
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

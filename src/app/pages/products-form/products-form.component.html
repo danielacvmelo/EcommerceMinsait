@@ -1,0 +1,49 @@
+<div class="container mt-5">
+  <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+    <div class="card-header bg-white py-3">
+      <h3 class="mb-0">{{ isEditMode ? 'Editar Produto' : 'Novo Produto' }}</h3>
+    </div>
+    
+    <div class="card-body">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        
+        <div class="mb-3">
+          <label class="form-label">Nome do Produto *</label>
+          <input type="text" class="form-control" formControlName="name" 
+                 [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched">
+          
+          @if (form.get('name')?.hasError('required')) {
+            <div class="invalid-feedback">Nome é obrigatório.</div>
+          }
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Preço (R$) *</label>
+            <input type="number" class="form-control" formControlName="price"
+                   [class.is-invalid]="form.get('price')?.invalid && form.get('price')?.touched">
+          </div>
+          
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Cód. Barras *</label>
+            <input type="text" class="form-control" formControlName="barcode"
+                   [class.is-invalid]="form.get('barcode')?.invalid && form.get('barcode')?.touched">
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">Descrição</label>
+          <textarea class="form-control" formControlName="description" rows="3"></textarea>
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <a routerLink="/admin" class="btn btn-outline-secondary">Cancelar</a>
+          <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+            {{ isEditMode ? 'Salvar Alterações' : 'Criar Produto' }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
