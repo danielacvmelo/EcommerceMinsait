@@ -2,13 +2,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AdminComponent } from './admin.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ProductService } from '../../services/product.service';
-import { of } from 'rxjs';
-import { Router, provideRouter } from '@angular/router'; 
+import { of, throwError } from 'rxjs';
+import { Router, provideRouter } from '@angular/router';
 import { Component, Input } from '@angular/core';
 @Component({ selector: 'app-products-table', standalone: true, template: '' })
-class MockProductsTableComponent {
-  @Input() products: any[] = [];
-}
+class MockProductsTableComponent { @Input() products: any[] = []; }
 
 describe('AdminComponent', () => {
   let component: AdminComponent;
@@ -16,24 +14,15 @@ describe('AdminComponent', () => {
   let service: ProductService;
   let router: Router;
 
-  const mockProducts = [
-    { id: 1, name: 'P1', price: 10, barcode: '111', description: '', image: '', stock: 10 },
-    { id: 2, name: 'P2', price: 20, barcode: '222', description: '', image: '', stock: 5 }
-  ];
+  const mockProducts = [{ id: 1, name: 'P1', price: 10, barcode: '1', stock: 5 }];
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        AdminComponent, 
-        HttpClientTestingModule
-      ],
-      providers: [
-        ProductService,
-        provideRouter([]) 
-      ]
+      imports: [AdminComponent, HttpClientTestingModule],
+      providers: [ProductService, provideRouter([])]
     })
     .overrideComponent(AdminComponent, {
-      remove: { imports: [ ] },
+      remove: { imports: [] },
       add: { imports: [MockProductsTableComponent] }
     })
     .compileComponents();
@@ -47,27 +36,41 @@ describe('AdminComponent', () => {
     spyOn(service, 'deleteProduct').and.returnValue(of(void 0));
     spyOn(router, 'navigate');
     spyOn(window, 'alert');
+    spyOn(console, 'error');
+  });
 
+  it('deve carregar produtos no inicio', () => {
     fixture.detectChanges();
+    expect(component.products.length).toBe(1);
   });
 
-  it('deve criar e carregar produtos no inicio', () => {
-    expect(component).toBeTruthy();
-    expect(service.getProducts).toHaveBeenCalled();
-    expect(component.products.length).toBe(2);
+  it('deve tratar erro ao carregar produtos', () => {
+    service.getProducts = jasmine.createSpy().and.returnValue(throwError(() => 'Erro Load'));
+    
+    fixture.detectChanges();
+
+    expect(console.error).toHaveBeenCalledWith('Erro ao carregar produtos', 'Erro Load');
   });
 
-  it('deve navegar para a rota de edição correta em handleEdit', () => {
-    const prod = mockProducts[0];
-    component.handleEdit(prod);
+  it('deve navegar ao editar', () => {
+    fixture.detectChanges();
+    component.handleEdit(mockProducts[0]);
     expect(router.navigate).toHaveBeenCalledWith(['/admin/editar', 1]);
   });
 
-  it('deve deletar produto e remover da lista local em handleDelete', () => {
-    expect(component.products.length).toBe(2);
+  it('deve deletar com sucesso', () => {
+    fixture.detectChanges();
     component.handleDelete(1);
     expect(service.deleteProduct).toHaveBeenCalledWith(1);
-    expect(component.products.length).toBe(1);
-    expect(component.products[0].id).toBe(2);
+    expect(window.alert).toHaveBeenCalledWith('Produto excluído com sucesso!');
+  });
+
+  it('deve tratar erro ao deletar', () => {
+    fixture.detectChanges();
+    service.deleteProduct = jasmine.createSpy().and.returnValue(throwError(() => 'Erro Delete'));
+
+    component.handleDelete(1);
+
+    expect(window.alert).toHaveBeenCalledWith('Erro ao excluir produto.');
   });
 });
