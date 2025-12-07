@@ -44,7 +44,6 @@ Para garantir a qualidade e a estabilidade das regras de negócio e componentes,
 
 Para executar a suíte de testes (via Karma/Jasmine):
 
-```bash
 ng test
 
 ---
