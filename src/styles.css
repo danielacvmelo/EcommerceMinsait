@@ -4,3 +4,7 @@ body {
   font-family: 'Inter', sans-serif; 
 
 }
+.bg-cyber-light {
+  background-color: #dcd7d7ff;
+  color: #000000;
+}

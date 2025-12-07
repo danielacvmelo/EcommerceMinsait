@@ -1,5 +1,5 @@
 <div class="container mt-5">
-  <h2 class="mb-4">Seu Carrinho de Compras</h2>
+  <h3 class="mb-4 text-dark">Carrinho de Compras</h3>
 
   @if (cartItems.length > 0) {
     <div class="card shadow-sm">
@@ -53,14 +53,14 @@
           
           <div class="text-end">
             <h4 class="mb-0">
-              Total: <span class="text-primary">{{ total | currency:'BRL' }}</span>
+              Total: <span class="text-secondary font-weight-bold">{{ total | currency:'BRL' }}</span>
             </h4>
             <small class="text-muted">Requisito: Valor calculado dinamicamente</small>
           </div>
         </div>
         
         <div class="text-end mt-3">
-          <button class="btn btn-success btn-lg">
+          <button class="btn btn-dark btn-lg">
             Finalizar Compra
           </button>
         </div>
