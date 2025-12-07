@@ -37,6 +37,7 @@ Siga os passos abaixo para iniciar a aplicação Front-end:
 3.  **Acessar a aplicação:**
     Abra o navegador em: `http://localhost:4200`
 
+---
 
 ## 🧪 Testes Unitários
 
