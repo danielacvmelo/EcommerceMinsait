@@ -6,6 +6,7 @@
         <th scope="col">Cód. Barras</th>
         <th scope="col">Nome</th>
         <th scope="col">Preço</th>
+        <th scope="col">Estoque</th>
         <th scope="col" class="text-end">Ações</th>
       </tr>
     </thead>
@@ -19,11 +20,12 @@
                  width="50" 
                  height="50" 
                  style="object-fit: cover;"
-                 onerror="this.src='assets/placeholder.png'"> </td>
+                 onerror="this.onerror=null;this.src='assets/placeholder.png'"> </td>
 
           <td>{{ product.barcode }}</td>
           <td>{{ product.name }}</td>
           <td>{{ product.price | currency:'BRL' }}</td>
+          <td>{{ product.stock }}</td>
 
           <td class="text-end">
             <button class="btn btn-sm btn-secondary me-2" (click)="onEdit(product)" title="Editar">

@@ -28,6 +28,7 @@ export class ProductsFormComponent implements OnInit {
       name: ['', [Validators.required, Validators.minLength(3)]],
       price: [0, [Validators.required, Validators.min(0.01)]],
       barcode: ['', [Validators.required]],
+      stock: [0, [Validators.required, Validators.min(0)]],
       description: [''],
       image: [''] 
     });
