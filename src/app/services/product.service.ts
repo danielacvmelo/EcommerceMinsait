@@ -16,7 +16,7 @@ export class ProductService {
       map(products => {
         return products.map(p => ({
           ...p,
-          image: `https://picsum.photos/seed/${p.id}/300/300`,
+          image: `https://picsum.photos/id/${p.id ? (p.id * 7) + 100 : 1}/300/300`,
           description: p.description || 'Produto de alta tecnologia com garantia Minsait.'
         }));
       })
