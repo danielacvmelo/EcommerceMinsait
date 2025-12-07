@@ -3,7 +3,7 @@ import { ProductsFormComponent } from './products-form.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
-import { of, throwError } from 'rxjs';
+import { of, throwError, BehaviorSubject } from 'rxjs'; 
 import { ActivatedRoute, Router, provideRouter } from '@angular/router';
 
 describe('ProductsFormComponent', () => {
@@ -11,12 +11,15 @@ describe('ProductsFormComponent', () => {
   let fixture: ComponentFixture<ProductsFormComponent>;
   let service: ProductService;
   let router: Router;
+  let routeParamsSubject: BehaviorSubject<any>;
 
   const mockProduct = { 
     id: 1, name: 'Teste', price: 50, barcode: '123', description: '', image: '', stock: 10 
   };
 
   beforeEach(async () => {
+    routeParamsSubject = new BehaviorSubject({});
+
     await TestBed.configureTestingModule({
       imports: [ProductsFormComponent, HttpClientTestingModule, ReactiveFormsModule],
       providers: [
@@ -24,7 +27,7 @@ describe('ProductsFormComponent', () => {
         provideRouter([]),
         {
           provide: ActivatedRoute,
-          useValue: { params: of({}) } 
+          useValue: { params: routeParamsSubject.asObservable() } 
         }
       ]
     })
@@ -43,7 +46,7 @@ describe('ProductsFormComponent', () => {
     spyOn(console, 'error'); 
   });
 
-  it('deve carregar dados na edição (loadProductData)', () => {
+  it('deve carregar dados na edição (loadProductData chamado manualmente)', () => {
     fixture.detectChanges(); 
     component.isEditMode = true;
     component.productId = 1;
@@ -59,7 +62,7 @@ describe('ProductsFormComponent', () => {
   });
 
   it('deve criar produto com sucesso', () => {
-    fixture.detectChanges();
+    fixture.detectChanges(); 
     component.form.patchValue({ name: 'Novo', price: 10, barcode: '123' }); 
 
     component.onSubmit();
@@ -90,7 +93,7 @@ describe('ProductsFormComponent', () => {
   });
 
   it('deve exibir alert de erro ao falhar na CRIAÇÃO', () => {
-    service.createProduct = jasmine.createSpy().and.returnValue(throwError(() => new Error('Erro API')));
+    (service.createProduct as jasmine.Spy).and.returnValue(throwError(() => new Error('Erro API')));
     
     fixture.detectChanges();
     component.form.patchValue({ name: 'Novo', price: 10, barcode: '123' });
@@ -102,7 +105,7 @@ describe('ProductsFormComponent', () => {
   });
 
   it('deve exibir alert de erro ao falhar na ATUALIZAÇÃO', () => {
-    service.updateProduct = jasmine.createSpy().and.returnValue(throwError(() => new Error('Erro API')));
+    (service.updateProduct as jasmine.Spy).and.returnValue(throwError(() => new Error('Erro API')));
 
     fixture.detectChanges();
     component.isEditMode = true;
@@ -113,4 +116,13 @@ describe('ProductsFormComponent', () => {
 
     expect(window.alert).toHaveBeenCalledWith('Erro ao atualizar.');
   });
+  
+  it('deve ativar isEditMode e carregar dados automaticamente no ngOnInit se houver ID na rota', () => {
+    routeParamsSubject.next({ id: '1' });
+    fixture.detectChanges();
+    expect(component.isEditMode).toBeTrue();
+    expect(component.productId).toBe(1);
+    expect(component.form.get('name')?.value).toBe('Teste');
+  });
+
 });
