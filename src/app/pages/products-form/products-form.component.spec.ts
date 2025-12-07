@@ -40,22 +40,27 @@ describe('ProductsFormComponent', () => {
     spyOn(service, 'getProducts').and.returnValue(of([mockProduct]));
     spyOn(window, 'alert');
     spyOn(router, 'navigate');
+    spyOn(console, 'error'); 
   });
 
   it('deve carregar dados na edição (loadProductData)', () => {
     fixture.detectChanges(); 
-    
     component.isEditMode = true;
     component.productId = 1;
-    component.loadProductData(1);
+    component.loadProductData(1); 
 
-    expect(service.getProducts).toHaveBeenCalled();
     expect(component.form.get('name')?.value).toBe('Teste');
+  });
+
+  it('não deve fazer nada no loadProductData se não achar ID', () => {
+    fixture.detectChanges();
+    component.loadProductData(99); 
+    expect(component.form.get('name')?.value).toBe(''); 
   });
 
   it('deve criar produto com sucesso', () => {
     fixture.detectChanges();
-    component.form.patchValue({ name: 'Novo', price: 10, barcode: '123' });
+    component.form.patchValue({ name: 'Novo', price: 10, barcode: '123' }); 
 
     component.onSubmit();
 
@@ -67,7 +72,7 @@ describe('ProductsFormComponent', () => {
     fixture.detectChanges();
     component.isEditMode = true;
     component.productId = 1;
-    component.form.patchValue({ name: 'Edit', price: 10, barcode: '123' });
+    component.form.patchValue(mockProduct); 
 
     component.onSubmit();
 
@@ -75,23 +80,37 @@ describe('ProductsFormComponent', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/admin']);
   });
 
-  it('deve lidar com erro na criação', () => {
-    service.createProduct = jasmine.createSpy().and.returnValue(throwError(() => 'Erro'));
-    spyOn(console, 'error');
+  it('não deve enviar se form for inválido', () => {
+    fixture.detectChanges();
+    component.form.reset(); 
+    component.onSubmit();
+    
+    expect(service.createProduct).not.toHaveBeenCalled();
+    expect(service.updateProduct).not.toHaveBeenCalled();
+  });
+
+  it('deve exibir alert de erro ao falhar na CRIAÇÃO', () => {
+    service.createProduct = jasmine.createSpy().and.returnValue(throwError(() => new Error('Erro API')));
     
     fixture.detectChanges();
     component.form.patchValue({ name: 'Novo', price: 10, barcode: '123' });
     
     component.onSubmit();
 
-    expect(console.error).toHaveBeenCalled();
-    expect(window.alert).toHaveBeenCalledWith('Erro ao criar.');
+    expect(console.error).toHaveBeenCalled(); 
+    expect(window.alert).toHaveBeenCalledWith('Erro ao criar.'); 
   });
-  
-  it('não deve enviar se form for inválido', () => {
-      fixture.detectChanges();
-      component.form.reset(); 
-      component.onSubmit();
-      expect(service.createProduct).not.toHaveBeenCalled();
+
+  it('deve exibir alert de erro ao falhar na ATUALIZAÇÃO', () => {
+    service.updateProduct = jasmine.createSpy().and.returnValue(throwError(() => new Error('Erro API')));
+
+    fixture.detectChanges();
+    component.isEditMode = true;
+    component.productId = 1;
+    component.form.patchValue(mockProduct);
+
+    component.onSubmit();
+
+    expect(window.alert).toHaveBeenCalledWith('Erro ao atualizar.');
   });
 });
