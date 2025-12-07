@@ -3,7 +3,6 @@
     <thead class="table-dark">
       <tr>
         <th scope="col" style="width: 80px;">Imagem</th>
-        
         <th scope="col">Cód. Barras</th>
         <th scope="col">Nome</th>
         <th scope="col">Preço</th>
@@ -19,12 +18,13 @@
                  class="rounded border bg-white"
                  width="50" 
                  height="50" 
-                 style="object-fit: cover;">
-          </td>
+                 style="object-fit: cover;"
+                 onerror="this.src='assets/placeholder.png'"> </td>
 
           <td>{{ product.barcode }}</td>
           <td>{{ product.name }}</td>
           <td>{{ product.price | currency:'BRL' }}</td>
+
           <td class="text-end">
             <button class="btn btn-sm btn-secondary me-2" (click)="onEdit(product)" title="Editar">
               <i class="bi bi-pencil"></i>
@@ -38,7 +38,10 @@
       } @empty {
         <tr>
           <td colspan="5" class="text-center py-5 text-muted">
-            Nenhum produto cadastrado.
+            <div class="d-flex flex-column align-items-center">
+              <i class="bi bi-box-seam display-6 mb-3"></i>
+              <span>Nenhum produto cadastrado.</span>
+            </div>
           </td>
         </tr>
       }

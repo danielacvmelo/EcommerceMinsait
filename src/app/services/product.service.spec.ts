@@ -28,7 +28,7 @@ describe('ProductService', () => {
   it('deve retornar produtos com imagem transformada (getProducts)', () => {
     service.getProducts().subscribe(products => {
       expect(products.length).toBe(1);
-      expect(products[0].image).toBe('https://picsum.photos/id/107/300/300');
+      expect(products[0].image).toBe('https://picsum.photos/seed/107/300/300');
       expect(products[0].description).toBe('Produto de alta tecnologia com garantia Minsait.');
     });
 
