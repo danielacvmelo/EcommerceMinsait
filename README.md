@@ -37,6 +37,16 @@ Siga os passos abaixo para iniciar a aplicação Front-end:
 3.  **Acessar a aplicação:**
     Abra o navegador em: `http://localhost:4200`
 
+
+## 🧪 Testes Unitários
+
+Para garantir a qualidade e a estabilidade das regras de negócio e componentes, o projeto conta com cobertura de testes unitários.
+
+Para executar a suíte de testes (via Karma/Jasmine):
+
+```bash
+ng test
+
 ---
 
 ## ✨ Funcionalidades Implementadas
